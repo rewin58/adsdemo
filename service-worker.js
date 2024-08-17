@@ -1,10 +1,10 @@
 const CACHE_NAME = 'my-pwa-cache-v1';
 const APP_SHELL_URLS = [
-    './',
-    './index.html',
-    './app.js',
-    './icon.png',
-    './manifest.json'
+    '/',
+    '/index.html',
+    '/app.js',
+    '/icon.png',
+    '/manifest.json'
 ];
 
 const APP_DOMAIN = 'https://microsoftedge.github.io/Demos/pwamp';
@@ -33,8 +33,8 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
     const url = new URL(event.request.url);
 
-    // 处理业务系统的请求
-    if (url.pathname.startsWith('/app')) {
+    // 处理对 '/app' 的请求
+    if (url.pathname === '/app' || url.pathname.startsWith('/app/')) {
         event.respondWith(handleAppRequest(event.request));
         return;
     }
@@ -48,8 +48,8 @@ self.addEventListener('fetch', (event) => {
 
 async function handleAppRequest(request) {
     const originalUrl = new URL(request.url);
-    const appUrl = new URL(originalUrl.pathname.replace('/app', '') + originalUrl.search, APP_DOMAIN);
-    console.log('appURL:', appUrl);
+    const appPath = originalUrl.pathname === '/app' ? '/' : originalUrl.pathname.replace('/app', '');
+    const appUrl = new URL(appPath + originalUrl.search, APP_DOMAIN);
 
     try {
         const response = await fetch(appUrl);
