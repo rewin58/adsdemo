@@ -10,6 +10,7 @@ const APP_SHELL_URLS = [
 const APP_DOMAIN = 'https://microsoftedge.github.io/Demos/pwamp';
 
 self.addEventListener('install', (event) => {
+    console.log('Service Worker installing.');
     event.waitUntil(
         caches.open(CACHE_NAME)
             .then((cache) => cache.addAll(APP_SHELL_URLS))
@@ -17,6 +18,7 @@ self.addEventListener('install', (event) => {
 });
 
 self.addEventListener('activate', (event) => {
+    console.log('Service Worker activating.');
     event.waitUntil(
         caches.keys().then((cacheNames) => {
             return Promise.all(
@@ -32,9 +34,11 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
     const url = new URL(event.request.url);
+    console.log('Fetching:', url.pathname);
 
     // 处理对 '/app' 的请求
     if (url.pathname === '/app' || url.pathname.startsWith('/app/')) {
+        console.log('Handling app request:', url.pathname);
         event.respondWith(handleAppRequest(event.request));
         return;
     }
@@ -50,6 +54,8 @@ async function handleAppRequest(request) {
     const originalUrl = new URL(request.url);
     const appPath = originalUrl.pathname === '/app' ? '/' : originalUrl.pathname.replace('/app', '');
     const appUrl = new URL(appPath + originalUrl.search, APP_DOMAIN);
+
+    console.log('Proxying request to:', appUrl.href);
 
     try {
         const response = await fetch(appUrl);
