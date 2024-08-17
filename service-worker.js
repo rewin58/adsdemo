@@ -7,7 +7,7 @@ const APP_SHELL_URLS = [
     './manifest.json'
 ];
 
-const APP_DOMAIN = 'https://app.example.com';
+const APP_DOMAIN = 'https://microsoftedge.github.io/Demos/pwamp/';
 
 self.addEventListener('install', (event) => {
     event.waitUntil(
