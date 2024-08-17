@@ -36,8 +36,8 @@ self.addEventListener('fetch', (event) => {
     const url = new URL(event.request.url);
     console.log('Fetching:', url.pathname);
 
-    // 处理对 '/app' 的请求
-    if (url.pathname === '/app' || url.pathname.startsWith('/app/')) {
+    // 处理对 '/adsdemo/app' 的请求
+    if (url.pathname === '/adsdemo/app' || url.pathname.startsWith('/adsdemo/app/')) {
         console.log('Handling app request:', url.pathname);
         event.respondWith(handleAppRequest(event.request));
         return;
@@ -52,7 +52,7 @@ self.addEventListener('fetch', (event) => {
 
 async function handleAppRequest(request) {
     const originalUrl = new URL(request.url);
-    const appPath = originalUrl.pathname === '/app' ? '/' : originalUrl.pathname.replace('/app', '');
+    const appPath = originalUrl.pathname === '/adsdemo/app' ? '/' : originalUrl.pathname.replace('/adsdemo/app', '');
     const appUrl = new URL(appPath + originalUrl.search, APP_DOMAIN);
 
     console.log('Proxying request to:', appUrl.href);
@@ -63,7 +63,7 @@ async function handleAppRequest(request) {
         // 处理HTML响应
         if (response.headers.get('Content-Type')?.includes('text/html')) {
             const text = await response.text();
-            const modifiedHtml = text.replace(new RegExp(APP_DOMAIN, 'g'), originalUrl.origin + '/app');
+            const modifiedHtml = text.replace(new RegExp(APP_DOMAIN, 'g'), originalUrl.origin + '/adsdemo/app');
             return new Response(modifiedHtml, {
                 status: response.status,
                 statusText: response.statusText,
