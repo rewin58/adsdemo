@@ -4,10 +4,9 @@ const APP_SHELL_URLS = [
     './index.html',
     './app.js',
     './icon.png',
-    './manifest.json'
+    './manifest.json',
+    './app-shell.html'  // 新增的空白页面
 ];
-
-const APP_DOMAIN = 'https://microsoftedge.github.io/Demos/pwamp';
 
 self.addEventListener('install', (event) => {
     console.log('Service Worker installing.');
@@ -33,47 +32,8 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-    const url = new URL(event.request.url);
-    console.log('Fetching:', url.pathname);
-
-    // 处理对 '/adsdemo/app' 的请求
-    if (url.pathname === '/adsdemo/app' || url.pathname.startsWith('/adsdemo/app/')) {
-        console.log('Handling app request:', url.pathname);
-        event.respondWith(handleAppRequest(event.request));
-        return;
-    }
-
-    // 处理PWA自身的资源请求
     event.respondWith(
         caches.match(event.request)
             .then((response) => response || fetch(event.request))
     );
 });
-
-async function handleAppRequest(request) {
-    const originalUrl = new URL(request.url);
-    const appPath = originalUrl.pathname === '/adsdemo/app' ? '/' : originalUrl.pathname.replace('/adsdemo/app', '');
-    const appUrl = new URL(appPath + originalUrl.search, APP_DOMAIN);
-
-    console.log('Proxying request to:', appUrl.href);
-
-    try {
-        const response = await fetch(appUrl);
-        
-        // 处理HTML响应
-        if (response.headers.get('Content-Type')?.includes('text/html')) {
-            const text = await response.text();
-            const modifiedHtml = text.replace(new RegExp(APP_DOMAIN, 'g'), originalUrl.origin + '/adsdemo/app');
-            return new Response(modifiedHtml, {
-                status: response.status,
-                statusText: response.statusText,
-                headers: response.headers
-            });
-        }
-
-        return response;
-    } catch (error) {
-        console.error('Proxy request failed:', error);
-        return new Response('Error: Unable to load content', { status: 500 });
-    }
-}

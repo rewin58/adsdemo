@@ -34,7 +34,7 @@ document.getElementById('installBtn').addEventListener('click', async () => {
 function loadWebApp() {
     const appContainer = document.getElementById('app-container');
     appContainer.style.display = 'block';
-    appContainer.innerHTML = '<iframe src="/adsdemo/app" style="width:100%;height:100%;border:none;"></iframe>';
+    appContainer.innerHTML = '<iframe src="/adsdemo/app-shell.html" style="width:100%;height:100%;border:none;"></iframe>';
     document.getElementById('installBtn').style.display = 'none';
 }
 
