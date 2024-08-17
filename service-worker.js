@@ -1,10 +1,10 @@
 const CACHE_NAME = 'my-pwa-cache-v1';
 const APP_SHELL_URLS = [
-    '/',
-    '/index.html',
-    '/app.js',
-    '/icon.png',
-    '/manifest.json'
+    './',
+    './index.html',
+    './app.js',
+    './icon.png',
+    './manifest.json'
 ];
 
 const APP_DOMAIN = 'https://microsoftedge.github.io/Demos/pwamp';
