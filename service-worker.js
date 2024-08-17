@@ -1,13 +1,13 @@
 const CACHE_NAME = 'my-pwa-cache-v1';
 const APP_SHELL_URLS = [
-    './',
-    './index.html',
-    './app.js',
-    './icon.png',
-    './manifest.json'
+    '/',
+    '/index.html',
+    '/app.js',
+    '/icon.png',
+    '/manifest.json'
 ];
 
-const APP_DOMAIN = 'https://microsoftedge.github.io/Demos/pwamp/';
+const APP_DOMAIN = 'https://microsoftedge.github.io/Demos/pwamp';
 
 self.addEventListener('install', (event) => {
     event.waitUntil(
@@ -33,7 +33,7 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
     const url = new URL(event.request.url);
 
-    // 处理APP_DOMAIN的请求
+    // 处理业务系统的请求
     if (url.pathname.startsWith('/app')) {
         event.respondWith(handleAppRequest(event.request));
         return;
@@ -49,20 +49,13 @@ self.addEventListener('fetch', (event) => {
 async function handleAppRequest(request) {
     const originalUrl = new URL(request.url);
     const appUrl = new URL(originalUrl.pathname.replace('/app', '') + originalUrl.search, APP_DOMAIN);
-
-    const modifiedRequest = new Request(appUrl, {
-        method: request.method,
-        headers: request.headers,
-        body: request.body,
-        mode: 'cors',
-        credentials: 'include'
-    });
+    console.log('appURL:', appUrl);
 
     try {
-        const response = await fetch(modifiedRequest);
+        const response = await fetch(appUrl);
         
         // 处理HTML响应
-        if (response.headers.get('Content-Type').includes('text/html')) {
+        if (response.headers.get('Content-Type')?.includes('text/html')) {
             const text = await response.text();
             const modifiedHtml = text.replace(new RegExp(APP_DOMAIN, 'g'), originalUrl.origin + '/app');
             return new Response(modifiedHtml, {
