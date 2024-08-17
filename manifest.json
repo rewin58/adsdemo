@@ -1,0 +1,15 @@
+{
+    "name": "我的广告应用",
+    "short_name": "广告应用",
+    "start_url": "./",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#4285f4",
+    "icons": [
+        {
+            "src": "icon.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        }
+    ]
+}
